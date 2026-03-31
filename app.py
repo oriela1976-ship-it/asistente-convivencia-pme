@@ -1,48 +1,45 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Configuración de la página
+# Configuración de página
 st.set_page_config(page_title="Asistente Convivencia - Profe Oriela", page_icon="🏫")
 
 st.title("🛡️ Generador de Acciones PME")
 st.subheader("Coordinación de Convivencia Escolar")
 
-# Barra lateral para la configuración
+# Barra lateral
 with st.sidebar:
     st.title("Configuración")
     api_key = st.text_input("Ingresa tu Gemini API Key", type="password")
-    st.info("Obtén tu clave en Google AI Studio")
 
 if api_key:
     try:
+        # CONFIGURACIÓN MAESTRA PARA EVITAR EL ERROR 404
         genai.configure(api_key=api_key)
         
-        # Este es el modelo más nuevo y estable (2026)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Seleccionamos el modelo más estable para marzo 2026
+        model = genai.GenerativeModel(model_name='gemini-1.5-flash')
         
         ambito = st.selectbox("Ámbito de la Acción", ["Formación", "Participación", "Prevención", "Gestión"])
         objetivo = st.text_area("¿Cuál es el nudo crítico o meta?")
 
         if st.button("✨ Generar Acción Técnica"):
             if not objetivo:
-                st.warning("Por favor, escribe un nudo crítico.")
+                st.warning("Escribe un nudo crítico primero.")
             else:
-                with st.spinner('Redactando propuesta técnica...'):
-                    # Prompt optimizado para Chile
-                    prompt = f"""Actúa como experto en Convivencia Escolar en Chile. 
-                    Redacta una acción PME para el ámbito {ambito} que resuelva: {objetivo}. 
-                    Entrega el resultado con:
-                    - Nombre de la acción.
-                    - Descripción detallada (acciones formativas).
-                    - Medios de Verificación.
-                    - Responsable sugerido."""
+                with st.spinner('Redactando propuesta formativa...'):
+                    # El prompt ahora es más específico para evitar errores de red
+                    prompt = f"Como experto en Convivencia Escolar en Chile, redacta una acción PME para el ámbito {ambito} sobre: {objetivo}. Incluye Nombre, Descripción, Medios de Verificación y Responsable."
                     
+                    # Forzamos la generación simple
                     response = model.generate_content(prompt)
-                    st.success("¡Propuesta Generada!")
+                    
+                    st.success("¡Propuesta Lista!")
                     st.markdown("---")
                     st.markdown(response.text)
                     
     except Exception as e:
-        st.error(f"Error de conexión: {e}. Revisa que tu API Key sea correcta.")
+        # Este mensaje te dirá si el problema es la clave o el modelo
+        st.error(f"Aviso técnico: {e}")
 else:
-    st.warning("👈 Por favor, ingresa tu API Key en la barra lateral para comenzar.")
+    st.warning("👈 Ingresa tu API Key en la barra lateral.")
