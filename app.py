@@ -18,7 +18,7 @@ if api_key:
         genai.configure(api_key=api_key)
         
         # Seleccionamos el modelo más estable para marzo 2026
-        model = genai.GenerativeModel(model_name='gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
         ambito = st.selectbox("Ámbito de la Acción", ["Formación", "Participación", "Prevención", "Gestión"])
         objetivo = st.text_area("¿Cuál es el nudo crítico o meta?")
