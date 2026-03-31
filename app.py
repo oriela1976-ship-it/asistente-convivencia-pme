@@ -13,7 +13,7 @@ if api_key:
     try:
         genai.configure(api_key=api_key)
         # Usamos gemini-1.5-flash que es el más actual y rápido
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-pro')
         
         ambito = st.selectbox("Ámbito de la Acción", ["Formación", "Participación", "Prevención", "Gestión"])
         objetivo = st.text_area("¿Cuál es el nudo crítico o meta?")
